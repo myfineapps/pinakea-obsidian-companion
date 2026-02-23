@@ -1,0 +1,38 @@
+.clarity-status-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.clarity-status-bubble {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  flex: 0 0 12px;
+  background: var(--text-faint);
+}
+
+.clarity-status-bubble.is-pink {
+  background: #ff4fb8;
+}
+
+.clarity-status-bubble.is-red {
+  background: #ff4a4a;
+}
+
+.clarity-status-bubble.is-orange {
+  background: #ff9f1a;
+}
+
+.clarity-status-bubble.is-green {
+  background: #28c76f;
+}
+
+.clarity-status-detail {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-top: 8px;
+  white-space: pre-wrap;
+}
+
