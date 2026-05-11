@@ -50,9 +50,9 @@ jobs:
                   "versions.json value mismatch for "
                   f"'{tag}': expected '{min_app}', got '{versions[tag]}'"
               )
-          if plugin_id != "onauno-obsidian-companion":
+          if plugin_id != "pinakea-obsidian-companion":
               sys.exit(
-                  "Plugin id mismatch: expected 'onauno-obsidian-companion', "
+                  "Plugin id mismatch: expected 'pinakea-obsidian-companion', "
                   f"got '{plugin_id}'"
               )
           PY
