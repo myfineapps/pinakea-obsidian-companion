@@ -1,9 +1,9 @@
 {
-  "id": "onauno-obsidian-companion",
-  "name": "ONA.UNO Companion",
-  "version": "0.1.0",
+  "id": "pinakea-obsidian-companion",
+  "name": "pinakea Companion",
+  "version": "0.1.1",
   "minAppVersion": "1.5.0",
-  "description": "Connects Obsidian with the ONA.UNO macOS app (readiness check + open/chat commands).",
+  "description": "Connects Obsidian with the pinakea macOS app (readiness check + open/chat commands).",
   "author": "Reckoner",
   "authorUrl": "https://reckoner.ch",
   "isDesktopOnly": true

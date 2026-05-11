@@ -104,7 +104,7 @@ function findClarityDatabasePaths() {
 function isClarityInstalledMac() {
   if (process.platform !== "darwin") return false;
   try {
-    const appNames = ["ONA.UNO", "Clarity"];
+    const appNames = ["pinakea", "Clarity"];
     for (const name of appNames) {
       const result = require("child_process").spawnSync(OPEN_PATH, ["-Ra", name], { encoding: "utf8" });
       if (result.status === 0) return true;
@@ -114,9 +114,9 @@ function isClarityInstalledMac() {
   try {
     const home = os.homedir();
     const appBundles = [
-      "/Applications/ONA.UNO.app",
+      "/Applications/pinakea.app",
       "/Applications/Clarity.app",
-      path.join(home, "Applications/ONA.UNO.app"),
+      path.join(home, "Applications/pinakea.app"),
       path.join(home, "Applications/Clarity.app")
     ];
     for (const bundlePath of appBundles) {
@@ -213,7 +213,7 @@ function makeItemDeepLink({ stableUuid, tab, newChat }) {
   if (tab) query.push(`tab=${encodeURIComponent(tab)}`);
   if (newChat) query.push("newChat=1");
   const suffix = query.length ? `?${query.join("&")}` : "";
-  return `ona-uno://item/${encodeURIComponent(stableUuid)}${suffix}`;
+  return `pinakea://item/${encodeURIComponent(stableUuid)}${suffix}`;
 }
 
 function makeObsidianOpenDeepLink({ vaultPath, filePath, tab, newChat }) {
@@ -223,7 +223,7 @@ function makeObsidianOpenDeepLink({ vaultPath, filePath, tab, newChat }) {
   ];
   if (tab) query.push(`tab=${encodeURIComponent(tab)}`);
   if (newChat) query.push("newChat=1");
-  return `ona-uno://obsidian/open?${query.join("&")}`;
+  return `pinakea://obsidian/open?${query.join("&")}`;
 }
 
 function vaultBasePath(app) {
@@ -248,7 +248,7 @@ class ClaritySettingsTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl("h2", { text: "ONA.UNO Companion" });
+    containerEl.createEl("h2", { text: "pinakea Companion" });
 
     const row = containerEl.createDiv({ cls: "clarity-status-row" });
     const bubble = row.createDiv({ cls: "clarity-status-bubble" });
@@ -257,19 +257,19 @@ class ClaritySettingsTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Refresh readiness")
-      .setDesc("Re-check ONA.UNO install + vault/source status.")
+      .setDesc("Re-check pinakea install + vault/source status.")
       .addButton((btn) => {
         btn.setButtonText("Refresh").onClick(() => {
           this.plugin.refreshReadiness({ bubble, label, detail }).catch((err) => {
             console.error(err);
-            new Notice("ONA.UNO: readiness check failed (see console).");
+            new Notice("pinakea: readiness check failed (see console).");
           });
         });
       });
 
     this.plugin.refreshReadiness({ bubble, label, detail }).catch((err) => {
       console.error(err);
-      new Notice("ONA.UNO: readiness check failed (see console).");
+      new Notice("pinakea: readiness check failed (see console).");
     });
   }
 }
@@ -280,14 +280,14 @@ module.exports = class ClarityCompanionPlugin extends Plugin {
 
     this.addCommand({
       id: "clarity-open-in-clarity",
-      name: "Open in ONA.UNO App",
+      name: "Open in pinakea App",
       checkCallback: (checking) => {
         const file = this.app.workspace.getActiveFile();
         if (!file) return false;
         if (checking) return true;
         this.openFileInClarity(file, { tab: "summary", newChat: false }).catch((err) => {
           console.error(err);
-          new Notice("ONA.UNO: failed to open note (see console).");
+          new Notice("pinakea: failed to open note (see console).");
         });
         return true;
       }
@@ -295,14 +295,14 @@ module.exports = class ClarityCompanionPlugin extends Plugin {
 
     this.addCommand({
       id: "clarity-chat-in-clarity",
-      name: "Chat in ONA.UNO App",
+      name: "Chat in pinakea App",
       checkCallback: (checking) => {
         const file = this.app.workspace.getActiveFile();
         if (!file) return false;
         if (checking) return true;
         this.openFileInClarity(file, { tab: "chat", newChat: true }).catch((err) => {
           console.error(err);
-          new Notice("ONA.UNO: failed to start chat (see console).");
+          new Notice("pinakea: failed to start chat (see console).");
         });
         return true;
       }
@@ -312,18 +312,18 @@ module.exports = class ClarityCompanionPlugin extends Plugin {
       this.app.workspace.on("file-menu", (menu, file) => {
         if (!file || file.extension !== "md") return;
         menu.addItem((item) => {
-          item.setTitle("Open in ONA.UNO App").onClick(() => {
+          item.setTitle("Open in pinakea App").onClick(() => {
             this.openFileInClarity(file, { tab: "summary", newChat: false }).catch((err) => {
               console.error(err);
-              new Notice("ONA.UNO: failed to open note (see console).");
+              new Notice("pinakea: failed to open note (see console).");
             });
           });
         });
         menu.addItem((item) => {
-          item.setTitle("Chat in ONA.UNO App").onClick(() => {
+          item.setTitle("Chat in pinakea App").onClick(() => {
             this.openFileInClarity(file, { tab: "chat", newChat: true }).catch((err) => {
               console.error(err);
-              new Notice("ONA.UNO: failed to start chat (see console).");
+              new Notice("pinakea: failed to start chat (see console).");
             });
           });
         });
@@ -343,16 +343,16 @@ module.exports = class ClarityCompanionPlugin extends Plugin {
     if (process.platform !== "darwin") {
       return {
         bubbleClass: "is-pink",
-        message: "Please install ONA.UNO.",
-        detail: "ONA.UNO Companion currently supports macOS only."
+        message: "Please install pinakea.",
+        detail: "pinakea Companion currently supports macOS only."
       };
     }
 
     if (!isClarityInstalledMac()) {
       return {
         bubbleClass: "is-pink",
-        message: "Please install ONA.UNO.",
-        detail: "ONA.UNO was not found via LaunchServices."
+        message: "Please install pinakea.",
+        detail: "pinakea was not found via LaunchServices."
       };
     }
 
@@ -369,8 +369,8 @@ module.exports = class ClarityCompanionPlugin extends Plugin {
     if (dbPaths.length === 0) {
       return {
         bubbleClass: "is-red",
-        message: "Current vault is not a source in ONA.UNO.",
-        detail: "ONA.UNO database not found yet. Open ONA.UNO App once, add this vault as a source, then activate it."
+        message: "Current vault is not a source in pinakea.",
+        detail: "pinakea database not found yet. Open pinakea App once, add this vault as a source, then activate it."
       };
     }
 
@@ -380,15 +380,15 @@ module.exports = class ClarityCompanionPlugin extends Plugin {
     } catch (err) {
       return {
         bubbleClass: "is-red",
-        message: "Current vault is not a source in ONA.UNO.",
-        detail: `Failed to read ONA.UNO database:\n${String(err)}`
+        message: "Current vault is not a source in pinakea.",
+        detail: `Failed to read pinakea database:\n${String(err)}`
       };
     }
 
     if (!match) {
       return {
         bubbleClass: "is-red",
-        message: "Current vault is not a source in ONA.UNO.",
+        message: "Current vault is not a source in pinakea.",
         detail: `Vault: ${vaultPath}\nDBs checked:\n${dbPaths.join("\n")}`
       };
     }
@@ -397,7 +397,7 @@ module.exports = class ClarityCompanionPlugin extends Plugin {
       const label = sourceTypeLabel(match.source.type);
       return {
         bubbleClass: "is-orange",
-        message: `Please activate the ${label} in ONA.UNO.`,
+        message: `Please activate the ${label} in pinakea.`,
         detail: `Vault: ${vaultPath}\nDB: ${match.dbPath}\nMatched: ${sourceTypeLabel(match.source.type)}\nSource path: ${match.source.namespace}`
       };
     }
@@ -405,18 +405,18 @@ module.exports = class ClarityCompanionPlugin extends Plugin {
     const label = sourceTypeLabel(match.source.type);
     return {
       bubbleClass: "is-green",
-      message: `Current vault is in ONA.UNO as an active ${label}.`,
+      message: `Current vault is in pinakea as an active ${label}.`,
       detail: `Vault: ${vaultPath}\nDB: ${match.dbPath}\nMatched: ${sourceTypeLabel(match.source.type)}\nSource path: ${match.source.namespace}`
     };
   }
 
   async openFileInClarity(file, { tab, newChat }) {
     if (process.platform !== "darwin") {
-      new Notice("ONA.UNO is macOS-only.");
+      new Notice("pinakea is macOS-only.");
       return;
     }
     if (!isClarityInstalledMac()) {
-      new Notice("ONA.UNO is not installed. Please install ONA.UNO.");
+      new Notice("pinakea is not installed. Please install pinakea.");
       return;
     }
 
@@ -441,7 +441,7 @@ module.exports = class ClarityCompanionPlugin extends Plugin {
         openExternal(url);
         return;
       } catch (err) {
-        console.warn(`ONA.UNO: DB lookup failed for ${dbPath}; continuing.`, err);
+        console.warn(`pinakea: DB lookup failed for ${dbPath}; continuing.`, err);
       }
     }
 
